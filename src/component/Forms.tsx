@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {ChangeEvent, FormEvent, useState} from "react";
 import s from "./Forms.module.css"
 import SuperInput from "./superInput/SuperInput";
 
@@ -58,8 +58,8 @@ function Forms() {
         errorMessage: "Сообщение должно быть не менее 10 и максимум 300 символов",
         label: "Сообщение",
     }
-
-    const handleFormSubmit = (e: any) => {
+    console.log("component")
+    const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (objValues.every(m => m !== "")) {
             const formData = new FormData()
@@ -72,8 +72,6 @@ function Forms() {
                 if (req.readyState == XMLHttpRequest.DONE) {
                     if (req.status == 200 && req.status < 300) {
                         alert("Отправка формы прошла успешно! " + req.response)
-                        e.preventDefault()
-                        setValues(initial)
                     } else {
                         alert(JSON.stringify("Ошибка " + req.status))
                     }
@@ -84,7 +82,7 @@ function Forms() {
         }
     }
 
-    const onChange = (e: any) => {
+    const onChange = (e: ChangeEvent<HTMLFormElement>) => {
         if (e.currentTarget.name === "name") {
             let x = e.currentTarget.value
             x = x.match("^([a-zA-Z]{3,30}) ([a-zA-Z]{3,30})$")
@@ -136,7 +134,8 @@ function Forms() {
                                 onChange={onChange}
                     />)}
                 <label>Сообщение*</label>
-                <textarea id={"t"} name="message" placeholder="Введите ваше сообщение" onChange={onChange} required
+                <textarea id={"t"} name="message" placeholder="Введите ваше сообщение"
+                          onChange={(e: any) => onChange(e)} required
                           minLength={10} maxLength={300}/>
                 <span>{textarea.errorMessage}</span>
                 <button type="submit">Отправить</button>
